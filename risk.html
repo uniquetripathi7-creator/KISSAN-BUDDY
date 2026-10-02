@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Risk Map | CropGuard</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
+
+        :root {
+            --green: #1e6a43;
+            --green-dark: #123d29;
+            --green-light: #e8f2e8;
+            --lime: #b8d96d;
+            --cream: #f7f7f1;
+            --white: #ffffff;
+            --ink: #17231d;
+            --muted: #68756d;
+            --line: #dce4dc;
+
+            --yellow: #e8b84a;
+            --red: #d96a54;
+            --shadow: 0 18px 50px rgba(23, 35, 29, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            height: 78px;
+            padding: 0 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: rgba(247, 247, 241, 0.92);
+            backdrop-filter: blur(16px);
+
+            border-bottom: 1px solid var(--line);
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+
+            display: grid;
+            place-items: center;
+
+            background: var(--green);
+            color: white;
+
+            font-size: 20px;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-family: "Manrope", sans-serif;
+            font-size: 17px;
+        }
+
+        .brand-text span {
+            display: block;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            padding: 10px 14px;
+            border-radius: 10px;
+
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--green);
+            background: var(--green-light);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification {
+            width: 40px;
+            height: 40px;
+
+            border: 1px solid var(--line);
+            border-radius: 12px;
+
+            background: white;
+
+            display: grid;
+            place-items: center;
+
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            width: 7px;
+            height: 7px;
+
+            background: var(--red);
+            border-radius: 50%;
+
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+
+        .profile {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 50%;
+
+            background: #dcebdc;
+            color: var(--green);
+
+            display: grid;
+            place-items: center;
+
+            font-weight: 800;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            width: min(1380px, 90%);
+            margin: auto;
+            padding: 42px 0 70px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 30px;
+
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            color: var(--green);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+
+            margin-bottom: 10px;
+        }
+
+        .eyebrow span {
+            width: 7px;
+            height: 7px;
+            background: var(--lime);
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(32px, 4vw, 50px);
+            line-height: 1.05;
+            letter-spacing: -1.8px;
+        }
+
+        .heading-copy {
+            max-width: 650px;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-top: 12px;
+        }
+
+        .location-select {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 13px;
+
+            padding: 12px 15px;
+            min-width: 190px;
+
+            box-shadow: 0 8px 25px rgba(23, 35, 29, 0.04);
+        }
+
+        .location-select span {
+            font-size: 18px;
+        }
+
+        .location-select select {
+            border: 0;
+            outline: none;
+            background: transparent;
+
+            color: var(--ink);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* =========================
+           RISK SUMMARY
+        ========================= */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+
+            margin-bottom: 22px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 20px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .summary-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .summary-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 11px;
+            background: var(--green-light);
+
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .summary-label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            font-family: "Manrope", sans-serif;
+            font-size: 28px;
+            margin-top: 12px;
+        }
+
+        .summary-status {
+            font-size: 12px;
+            margin-top: 5px;
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .summary-status.warning {
+            color: #a87812;
+        }
+
+        .summary-status.danger {
+            color: var(--red);
+        }
+
+        /* =========================
+           MAIN MAP AREA
+        ========================= */
+
+        .map-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.8fr) minmax(300px, 0.75fr);
+            gap: 20px;
+        }
+
+        .map-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .map-header {
+            padding: 21px 23px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid var(--line);
+        }
+
+        .map-title h2 {
+            font-family: "Manrope", sans-serif;
+            font-size: 18px;
+        }
+
+        .map-title p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .live {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--green);
+
+            background: var(--green-light);
+            padding: 8px 11px;
+            border-radius: 20px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+
+            animation: pulse 1.6s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+        }
+
+        /* =========================
+           FAKE FARM MAP
+        ========================= */
+
+        .map {
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+
+            background:
+                linear-gradient(135deg, rgba(223, 235, 221, 0.7), rgba(242, 239, 217, 0.8));
+        }
+
+        .map::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background-image:
+                linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px);
+
+            background-size: 52px 52px;
+
+            opacity: 0.6;
+        }
+
+        .road {
+            position: absolute;
+            background: rgba(255,255,255,.75);
+            border-radius: 100px;
+        }
+
+        .road.one {
+            width: 130%;
+            height: 28px;
+            left: -15%;
+            top: 52%;
+            transform: rotate(-13deg);
+        }
+
+        .road.two {
+            width: 100%;
+            height: 24px;
+            left: 14%;
+            top: 20%;
+            transform: rotate(43deg);
+        }
+
+        .river {
+            position: absolute;
+            width: 55px;
+            height: 130%;
+            right: 17%;
+            top: -10%;
+
+            background: rgba(154, 199, 202, 0.55);
+            border-radius: 50%;
+
+            transform: rotate(18deg);
+        }
+
+        .field {
+            position: absolute;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            border: 3px solid rgba(255,255,255,.8);
+
+            cursor: pointer;
+
+            transition: 0.25s;
+        }
+
+        .field:hover {
+            transform: scale(1.035);
+            z-index: 10;
+        }
+
+        .field strong {
+            font-size: 13px;
+            display: block;
+        }
+
+        .field small {
+            font-size: 10px;
+            display: block;
+            margin-top: 4px;
+            opacity: .8;
+        }
+
+        .field-low {
+            background: rgba(110, 170, 101, .62);
+        }
+
+        .field-medium {
+            background: rgba(228, 185, 74, .7);
+        }
+
+        .field-high {
+            background: rgba(217, 106, 84, .68);
+        }
+
+        .field-a {
+            width: 27%;
+            height: 26%;
+            left: 8%;
+            top: 11%;
+            border-radius: 30px 8px 15px 8px;
+            transform: rotate(-4deg);
+        }
+
+        .field-b {
+            width: 31%;
+            height: 30%;
+            left: 37%;
+            top: 8%;
+            border-radius: 12px 32px 10px 18px;
+            transform: rotate(5deg);
+        }
+
+        .field-c {
+            width: 27%;
+            height: 28%;
+            left: 13%;
+            top: 43%;
+            border-radius: 10px 25px 30px 12px;
+            transform: rotate(3deg);
+        }
+
+        .field-d {
+            width: 30%;
+            height: 26%;
+            left: 45%;
+            top: 46%;
+            border-radius: 25px 10px 12px 28px;
+            transform: rotate(-3deg);
+        }
+
+        .field-e {
+            width: 23%;
+            height: 25%;
+            left: 72%;
+            top: 60%;
+            border-radius: 18px 35px 8px 15px;
+            transform: rotate(7deg);
+        }
+
+        .field-f {
+            width: 23%;
+            height: 22%;
+            left: 68%;
+            top: 23%;
+            border-radius: 30px 10px 20px 8px;
+            transform: rotate(-6deg);
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+
+            background: var(--green);
+            border: 3px solid white;
+
+            box-shadow: 0 5px 14px rgba(0,0,0,.2);
+        }
+
+        .marker-one {
+            left: 50%;
+            top: 39%;
+        }
+
+        .marker-two {
+            left: 79%;
+            top: 50%;
+            background: var(--red);
+        }
+
+        .marker-three {
+            left: 25%;
+            top: 73%;
+            background: var(--yellow);
+        }
+
+        .map-controls {
+            position: absolute;
+            right: 18px;
+            top: 18px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .map-control {
+            width: 38px;
+            height: 38px;
+
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+
+            display: grid;
+            place-items: center;
+
+            font-size: 18px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow: 0 7px 18px rgba(0,0,0,.08);
+        }
+
+        .legend {
+            position: absolute;
+            left: 18px;
+            bottom: 18px;
+
+            background: rgba(255,255,255,.95);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+
+            padding: 14px 16px;
+
+            box-shadow: 0 10px 30px rgba(23,35,29,.1);
+        }
+
+        .legend-title {
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 9px;
+        }
+
+        .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            font-size: 10px;
+            color: var(--muted);
+
+            margin-top: 6px;
+        }
+
+        .legend-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .legend-low {
+            background: #6eaa65;
+        }
+
+        .legend-medium {
+            background: var(--yellow);
+        }
+
+        .legend-high {
+            background: var(--red);
+        }
+
+        /* =========================
+           SIDE PANEL
+        ========================= */
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 21px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .panel h3 {
+            font-family: "Manrope", sans-serif;
+            font-size: 16px;
+        }
+
+        .panel-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 5px;
+        }
+
+        .risk-list {
+            margin-top: 17px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .risk-item {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            padding: 12px;
+
+            border: 1px solid var(--line);
+            border-radius: 13px;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .risk-item:hover {
+            border-color: #b9cbbd;
+            transform: translateY(-2px);
+        }
+
+        .risk-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .risk-info {
+            flex: 1;
+        }
+
+        .risk-info strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .risk-info span {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .risk-level {
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .green-text {
+            color: var(--green);
+        }
+
+        .yellow-text {
+            color: #a87812;
+        }
+
+        .red-text {
+            color: var(--red);
+        }
+
+        /* =========================
+           SIGNAL CARD
+        ========================= */
+
+        .signal {
+            margin-top: 17px;
+
+            padding: 14px;
+
+            border-radius: 14px;
+            background: #f6f8f2;
+
+            border: 1px solid #e4eadf;
+        }
+
+        .signal-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .signal-title {
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .signal-value {
+            color: var(--red);
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .progress {
+            height: 7px;
+            border-radius: 20px;
+
+            background: #e3e9df;
+
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress span {
+            display: block;
+            width: 68%;
+            height: 100%;
+
+            background: var(--red);
+            border-radius: inherit;
+        }
+
+        .signal p {
+            font-size: 10px;
+            line-height: 1.5;
+            color: var(--muted);
+            margin-top: 9px;
+        }
+
+        /* =========================
+           CTA
+        ========================= */
+
+        .scan-cta {
+            background: var(--green-dark);
+            color: white;
+
+            border-radius: 20px;
+            padding: 22px;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scan-cta::after {
+            content: "";
+            position: absolute;
+
+            width: 140px;
+            height: 140px;
+
+            right: -50px;
+            top: -60px;
+
+            border-radius: 50%;
+            border: 25px solid rgba(184,217,109,.12);
+        }
+
+        .scan-cta h3 {
+            font-family: "Manrope", sans-serif;
+            font-size: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .scan-cta p {
+            font-size: 11px;
+            line-height: 1.6;
+            color: #c9d8ce;
+            margin: 7px 0 16px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .scan-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            background: var(--lime);
+            color: var(--green-dark);
+
+            border: 0;
+            border-radius: 10px;
+
+            padding: 11px 15px;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            position: relative;
+            z-index: 2;
+
+            transition: 0.2s;
+        }
+
+        .scan-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            width: min(1380px, 90%);
+            margin: auto;
+
+            padding: 24px 0 35px;
+
+            border-top: 1px solid var(--line);
+
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1050px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .map-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side-panel {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .scan-cta {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 760px) {
+
+            .navbar {
+                height: 70px;
+                padding: 0 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .brand-text span {
+                display: none;
+            }
+
+            .page {
+                width: 92%;
+                padding-top: 30px;
+            }
+
+            .page-heading {
+                display: block;
+            }
+
+            .location-select {
+                margin-top: 20px;
+                width: 100%;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .summary-card {
+                padding: 15px;
+            }
+
+            .summary-value {
+                font-size: 23px;
+            }
+
+            .map {
+                height: 430px;
+            }
+
+            .side-panel {
+                display: flex;
+            }
+
+            footer {
+                display: block;
+            }
+
+            footer span {
+                display: block;
+                margin-top: 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map {
+                height: 390px;
+            }
+
+            .field strong {
+                font-size: 10px;
+            }
+
+            .field small {
+                font-size: 8px;
+            }
+
+            .legend {
+                transform: scale(.9);
+                transform-origin: bottom left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
+
+    <header class="navbar">
+
+        <a href="../index.html" class="brand">
+
+            <div class="brand-icon">
+                🌱
+            </div>
+
+            <div class="brand-text">
+                <strong>CropGuard</strong>
+                <span>Crop Health Intelligence</span>
+            </div>
+
+        </a>
+
+        <nav class="nav-links">
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="risk-map.html" class="active">
+                Risk Map
+            </a>
+
+            <a href="scan.html">
+                Crop Scan
+            </a>
+
+            <a href="#">
+                Advisories
+            </a>
+
+        </nav>
+
+        <div class="nav-right">
+
+            <button class="notification" id="notificationBtn">
+                🔔
+                <span class="notification-dot"></span>
+            </button>
+
+            <div class="profile">
+                F
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="page">
+
+        <section class="page-heading">
+
+            <div>
+
+                <div class="eyebrow">
+                    <span></span>
+                    FIELD RISK INTELLIGENCE
+                </div>
+
+                <h1>
+                    Know where the risk<br>
+                    is building.
+                </h1>
+
+                <p class="heading-copy">
+                    CropGuard combines crop observations, weather conditions,
+                    field information and local signals to highlight areas
+                    that may need attention before visible damage spreads.
+                </p>
+
+            </div>
+
+
+            <div class="location-select">
+
+                <span>📍</span>
+
+                <select id="areaSelect">
+
+                    <option>My Farm Area</option>
+                    <option>North Zone</option>
+                    <option>East Zone</option>
+                    <option>South Zone</option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SUMMARY
+        ========================= -->
+
+        <section class="summary-grid">
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+
+                    <div class="summary-label">
+                        FIELDS MONITORED
+                    </div>
+
+                    <div class="summary-icon">
+                        🌾
+                    </div>
+
+                </div>
+
+                <div class="summary-value">
+                    06
+                </div>
+
+                <div class="summary-status green-text">
+                    All fields connected
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+
+                    <div class="summary-label">
+                        LOW RISK
+                    </div>
+
+                    <div class="summary-icon">
+                        ✓
+                    </div>
+
+                </div>
+
+                <div class="summary-value">
+                    03
+                </div>
+
+                <div class="summary-status">
+                    Conditions look stable
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+
+                    <div class="summary-label">
+                        WATCH
+                    </div>
+
+                    <div class="summary-icon">
+                        ◐
+                    </div>
+
+                </div>
+
+                <div class="summary-value">
+                    02
+                </div>
+
+                <div class="summary-status warning">
+                    Monitor closely
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+
+                    <div class="summary-label">
+                        HIGHER RISK
+                    </div>
+
+                    <div class="summary-icon">
+                        !
+                    </div>
+
+                </div>
+
+                <div class="summary-value">
+                    01
+                </div>
+
+                <div class="summary-status danger">
+                    Action recommended
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             MAP + SIDE
+        ========================= -->
+
+        <section class="map-layout">
+
+            <!-- MAP -->
+
+            <div class="map-card">
+
+                <div class="map-header">
+
+                    <div class="map-title">
+
+                        <h2>
+                            Field Risk Map
+                        </h2>
+
+                        <p>
+                            Updated from recent crop and weather signals
+                        </p>
+
+                    </div>
+
+                    <div class="live">
+                        <span class="live-dot"></span>
+                        LIVE SIGNALS
+                    </div>
+
+                </div>
+
+
+                <div class="map">
+
+                    <div class="road one"></div>
+                    <div class="road two"></div>
+
+                    <div class="river"></div>
+
+
+                    <div class="field field-low field-a"
+                         data-field="North Field">
+                        <div>
+                            <strong>North Field</strong>
+                            <small>Low risk</small>
+                        </div>
+                    </div>
+
+
+                    <div class="field field-medium field-b"
+                         data-field="East Field">
+                        <div>
+                            <strong>East Field</strong>
+                            <small>Watch</small>
+                        </div>
+                    </div>
+
+
+                    <div class="field field-low field-c"
+                         data-field="South Field">
+                        <div>
+                            <strong>South Field</strong>
+                            <small>Low risk</small>
+                        </div>
+                    </div>
+
+
+                    <div class="field field-high field-d"
+                         data-field="Central Field">
+                        <div>
+                            <strong>Central Field</strong>
+                            <small>Higher risk</small>
+                        </div>
+                    </div>
+
+
+                    <div class="field field-medium field-e"
+                         data-field="West Field">
+                        <div>
+                            <strong>West Field</strong>
+                            <small>Watch</small>
+                        </div>
+                    </div>
+
+
+                    <div class="field field-low field-f"
+                         data-field="River Field">
+                        <div>
+                            <strong>River Field</strong>
+                            <small>Low risk</small>
+                        </div>
+                    </div>
+
+
+                    <!-- LOCATION MARKERS -->
+
+                    <div class="map-marker marker-one"></div>
+                    <div class="map-marker marker-two"></div>
+                    <div class="map-marker marker-three"></div>
+
+
+                    <!-- MAP CONTROLS -->
+
+                    <div class="map-controls">
+
+                        <button class="map-control" id="zoomIn">
+                            +
+                        </button>
+
+                        <button class="map-control" id="zoomOut">
+                            −
+                        </button>
+
+                        <button class="map-control" id="locateBtn">
+                            ◎
+                        </button>
+
+                    </div>
+
+
+                    <!-- LEGEND -->
+
+                    <div class="legend">
+
+                        <div class="legend-title">
+                            RISK LEVEL
+                        </div>
+
+                        <div class="legend-row">
+                            <span class="legend-dot legend-low"></span>
+                            Low
+                        </div>
+
+                        <div class="legend-row">
+                            <span class="legend-dot legend-medium"></span>
+                            Watch
+                        </div>
+
+                        <div class="legend-row">
+                            <span class="legend-dot legend-high"></span>
+                            Higher risk
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SIDE -->
+
+            <aside class="side-panel">
+
+
+                <div class="panel">
+
+                    <h3>
+                        Fields needing attention
+                    </h3>
+
+                    <p class="panel-subtitle">
+                        These fields show signals worth checking.
+                    </p>
+
+
+                    <div class="risk-list">
+
+                        <div class="risk-item">
+
+                            <span
+                                class="risk-dot"
+                                style="background:#d96a54;">
+                            </span>
+
+                            <div class="risk-info">
+                                <strong>Central Field</strong>
+                                <span>Fungal conditions rising</span>
+                            </div>
+
+                            <span class="risk-level red-text">
+                                HIGH
+                            </span>
+
+                        </div>
+
+
+                        <div class="risk-item">
+
+                            <span
+                                class="risk-dot"
+                                style="background:#e8b84a;">
+                            </span>
+
+                            <div class="risk-info">
+                                <strong>East Field</strong>
+                                <span>Humidity + leaf symptoms</span>
+                            </div>
+
+                            <span class="risk-level yellow-text">
+                                WATCH
+                            </span>
+
+                        </div>
+
+
+                        <div class="risk-item">
+
+                            <span
+                                class="risk-dot"
+                                style="background:#e8b84a;">
+                            </span>
+
+                            <div class="risk-info">
+                                <strong>West Field</strong>
+                                <span>Weather risk increasing</span>
+                            </div>
+
+                            <span class="risk-level yellow-text">
+                                WATCH
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <h3>
+                        Why the risk changed
+                    </h3>
+
+                    <p class="panel-subtitle">
+                        CropGuard looks at several signals instead of
+                        relying on one symptom alone.
+                    </p>
+
+
+                    <div class="signal">
+
+                        <div class="signal-top">
+
+                            <span class="signal-title">
+                                Humidity
+                            </span>
+
+                            <span class="signal-value">
+                                HIGH
+                            </span>
+
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:78%;"></span>
+                        </div>
+
+                        <p>
+                            Moist conditions can increase the likelihood
+                            of some fungal crop problems.
+                        </p>
+
+                    </div>
+
+
+                    <div class="signal">
+
+                        <div class="signal-top">
+
+                            <span class="signal-title">
+                                Recent crop symptoms
+                            </span>
+
+                            <span class="signal-value">
+                                WATCH
+                            </span>
+
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:61%;"></span>
+                        </div>
+
+                        <p>
+                            Recent observations indicate that some
+                            plants may need closer inspection.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="scan-cta">
+
+                    <h3>
+                        Something looks different?
+                    </h3>
+
+                    <p>
+                        Take a clear photo of the affected plant.
+                        CropGuard can help you understand what to
+                        check next.
+                    </p>
+
+                    <a href="scan.html" class="scan-button">
+                        📷 Scan a crop →
+                    </a>
+
+                </div>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        <span>
+            © 2026 CropGuard
+        </span>
+
+        <span>
+            Early signals • Better decisions • Healthier crops
+        </span>
+
+    </footer>
+
+
+    <script>
+
+        /* =========================
+           NOTIFICATION
+        ========================= */
+
+        const notificationBtn =
+            document.getElementById("notificationBtn");
+
+        notificationBtn.addEventListener("click", function () {
+
+            const dot =
+                document.querySelector(".notification-dot");
+
+            if (dot) {
+                dot.style.display = "none";
+            }
+
+            alert("You have 2 crop health alerts to review.");
+
+        });
+
+
+        /* =========================
+           FIELD CLICK
+        ========================= */
+
+        document.querySelectorAll(".field").forEach(field => {
+
+            field.addEventListener("click", function () {
+
+                const name =
+                    this.dataset.field;
+
+                alert(
+                    name +
+                    "\n\nOpening field health details..."
+                );
+
+            });
+
+        });
+
+
+        /* =========================
+           MAP ZOOM
+        ========================= */
+
+        const map = document.querySelector(".map");
+
+        let zoomLevel = 1;
+
+        document.getElementById("zoomIn")
+            .addEventListener("click", function () {
+
+                zoomLevel = Math.min(
+                    zoomLevel + 0.08,
+                    1.25
+                );
+
+                map.style.transform =
+                    `scale(${zoomLevel})`;
+
+            });
+
+
+        document.getElementById("zoomOut")
+            .addEventListener("click", function () {
+
+                zoomLevel = Math.max(
+                    zoomLevel - 0.08,
+                    1
+                );
+
+                map.style.transform =
+                    `scale(${zoomLevel})`;
+
+            });
+
+
+        /* =========================
+           LOCATION BUTTON
+        ========================= */
+
+        document.getElementById("locateBtn")
+            .addEventListener("click", function () {
+
+                alert(
+                    "Your farm area is already selected.\n\n" +
+                    "CropGuard is monitoring your connected fields."
+                );
+
+            });
+
+
+        /* =========================
+           AREA SELECT
+        ========================= */
+
+        document.getElementById("areaSelect")
+            .addEventListener("change", function () {
+
+                alert(
+                    "Showing risk signals for: " +
+                    this.value
+                );
+
+            });
+
+    </script>
+
+</body>
+</html>

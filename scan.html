@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CropGuard | Check Crop Health</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green-dark: #123d29;
+            --green: #1e6a43;
+            --green-light: #4d9861;
+            --lime: #c8df78;
+
+            --cream: #f7f7f0;
+            --soft: #edf4ea;
+            --white: #ffffff;
+
+            --ink: #17231d;
+            --muted: #68766d;
+
+            --line: #dce6dc;
+
+            --orange: #e99b42;
+            --orange-soft: #fff3df;
+
+            --blue: #4d8faf;
+            --blue-soft: #edf6fa;
+
+            --red: #d65d51;
+            --red-soft: #fff0ed;
+
+            --shadow: 0 20px 55px rgba(21, 63, 39, 0.09);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+            height: 76px;
+            background: rgba(255,255,255,0.94);
+            border-bottom: 1px solid var(--line);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 34px;
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            backdrop-filter: blur(15px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-family: "Manrope", sans-serif;
+            font-size: 21px;
+            font-weight: 800;
+
+            color: var(--green-dark);
+        }
+
+        .brand-mark {
+            width: 39px;
+            height: 39px;
+
+            border-radius: 12px;
+
+            display: grid;
+            place-items: center;
+
+            color: white;
+            background: var(--green);
+
+            font-size: 20px;
+
+            box-shadow:
+                0 8px 22px rgba(30,106,67,0.22);
+        }
+
+        .brand span {
+            color: var(--green);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-dashboard {
+            padding: 10px 15px;
+
+            border: 1px solid var(--line);
+            border-radius: 11px;
+
+            background: white;
+
+            color: var(--muted);
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition: 0.25s;
+        }
+
+        .back-dashboard:hover {
+            color: var(--green);
+            border-color: #bdd3c0;
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           PAGE HEADER
+        ===================================================== */
+
+        .page {
+            width: min(1180px, calc(100% - 40px));
+            margin: auto;
+
+            padding: 52px 0 80px;
+        }
+
+        .page-header {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 38px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            color: var(--green);
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+
+            margin-bottom: 13px;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--green-light);
+
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0% {
+                box-shadow: 0 0 0 0 rgba(77,152,97,0.35);
+            }
+
+            70% {
+                box-shadow: 0 0 0 9px rgba(77,152,97,0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(77,152,97,0);
+            }
+
+        }
+
+        .page-title {
+            font-family: "Manrope", sans-serif;
+
+            font-size: clamp(34px, 5vw, 55px);
+
+            line-height: 1.04;
+
+            letter-spacing: -0.045em;
+
+            color: var(--green-dark);
+        }
+
+        .page-title span {
+            color: var(--green);
+        }
+
+        .page-description {
+            color: var(--muted);
+
+            max-width: 610px;
+
+            margin: 15px auto 0;
+
+            line-height: 1.7;
+
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           MAIN SCAN AREA
+        ===================================================== */
+
+        .scan-layout {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.15fr)
+                minmax(340px, 0.85fr);
+
+            gap: 24px;
+
+            align-items: stretch;
+        }
+
+
+        /* =====================================================
+           UPLOAD CARD
+        ===================================================== */
+
+        .upload-card {
+            background: white;
+
+            border: 1px solid var(--line);
+
+            border-radius: 25px;
+
+            padding: 25px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: "Manrope", sans-serif;
+
+            font-size: 18px;
+            font-weight: 800;
+
+            color: var(--green-dark);
+        }
+
+        .step {
+            color: var(--muted);
+
+            font-size: 11px;
+            font-weight: 700;
+
+            background: var(--soft);
+
+            padding: 7px 10px;
+
+            border-radius: 20px;
+        }
+
+
+        /* =====================================================
+           DROP ZONE
+        ===================================================== */
+
+        .drop-zone {
+
+            min-height: 355px;
+
+            border: 2px dashed #bfd2c2;
+
+            border-radius: 20px;
+
+            background:
+                radial-gradient(
+                    circle at 50% 20%,
+                    rgba(200,223,120,0.13),
+                    transparent 40%
+                ),
+                #f8fbf6;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 30px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition:
+                border-color 0.25s,
+                background 0.25s,
+                transform 0.25s;
+        }
+
+        .drop-zone.dragging {
+            border-color: var(--green);
+            background: #eef7e9;
+            transform: scale(1.01);
+        }
+
+        .upload-icon {
+
+            width: 82px;
+            height: 82px;
+
+            border-radius: 25px;
+
+            background: var(--green);
+
+            display: grid;
+            place-items: center;
+
+            color: white;
+
+            font-size: 35px;
+
+            box-shadow:
+                0 14px 35px rgba(30,106,67,0.20);
+
+            margin-bottom: 20px;
+
+            animation:
+                gentleFloat 3.5s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+
+        }
+
+        .drop-title {
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: 21px;
+
+            font-weight: 800;
+
+            color: var(--green-dark);
+
+            margin-bottom: 8px;
+        }
+
+        .drop-text {
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            max-width: 410px;
+
+            margin-bottom: 19px;
+        }
+
+        .browse-btn {
+
+            border: none;
+
+            background: var(--green);
+
+            color: white;
+
+            border-radius: 12px;
+
+            padding: 12px 19px;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            transition: 0.25s;
+        }
+
+        .browse-btn:hover {
+
+            background: var(--green-dark);
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 25px rgba(30,106,67,0.20);
+        }
+
+        .file-note {
+
+            color: #8a968e;
+
+            font-size: 10px;
+
+            margin-top: 12px;
+        }
+
+
+        /* =====================================================
+           IMAGE PREVIEW
+        ===================================================== */
+
+        .image-preview {
+
+            position: absolute;
+
+            inset: 0;
+
+            display: none;
+
+            background: #eaf1e6;
+        }
+
+        .image-preview.show {
+            display: block;
+        }
+
+        .image-preview img {
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            display: block;
+        }
+
+        .preview-overlay {
+
+            position: absolute;
+
+            inset: 0;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            padding: 18px;
+
+            background:
+                linear-gradient(
+                    transparent 40%,
+                    rgba(18,61,41,0.82)
+                );
+        }
+
+        .preview-file {
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+        .remove-image {
+
+            margin-left: auto;
+
+            border: 1px solid rgba(255,255,255,0.25);
+
+            background: rgba(0,0,0,0.2);
+
+            color: white;
+
+            border-radius: 9px;
+
+            padding: 7px 10px;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================================
+           CROP DETAILS
+        ===================================================== */
+
+        .crop-details {
+
+            margin-top: 20px;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 12px;
+        }
+
+        .field-label {
+
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            margin-bottom: 7px;
+        }
+
+        .select-box {
+
+            width: 100%;
+
+            border: 1px solid var(--line);
+
+            background: white;
+
+            border-radius: 11px;
+
+            padding: 12px;
+
+            color: var(--ink);
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        .select-box:focus {
+
+            border-color: var(--green-light);
+
+            box-shadow:
+                0 0 0 3px rgba(77,152,97,0.09);
+        }
+
+
+        /* =====================================================
+           ANALYSIS INFORMATION
+        ===================================================== */
+
+        .info-column {
+
+            display: flex;
+            flex-direction: column;
+            gap: 17px;
+        }
+
+        .info-card {
+
+            background: white;
+
+            border: 1px solid var(--line);
+
+            border-radius: 21px;
+
+            padding: 21px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .info-card-title {
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            color: var(--green-dark);
+
+            margin-bottom: 14px;
+        }
+
+
+        /* =====================================================
+           HOW IT WORKS
+        ===================================================== */
+
+        .process {
+
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .process-item {
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .process-number {
+
+            width: 34px;
+            height: 34px;
+
+            flex: 0 0 auto;
+
+            border-radius: 10px;
+
+            display: grid;
+            place-items: center;
+
+            background: var(--soft);
+
+            color: var(--green);
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+        .process-text strong {
+
+            display: block;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+        .process-text span {
+
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 10px;
+
+            margin-top: 2px;
+        }
+
+
+        /* =====================================================
+           WHAT WE CHECK
+        ===================================================== */
+
+        .signals {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 9px;
+        }
+
+        .signal {
+
+            border: 1px solid var(--line);
+
+            border-radius: 12px;
+
+            padding: 12px;
+
+            background: #fbfcfa;
+        }
+
+        .signal-icon {
+
+            font-size: 17px;
+
+            margin-bottom: 7px;
+        }
+
+        .signal strong {
+
+            display: block;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+        .signal span {
+
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 9px;
+
+            line-height: 1.4;
+
+            margin-top: 3px;
+        }
+
+
+        /* =====================================================
+           SAFETY NOTE
+        ===================================================== */
+
+        .safety-note {
+
+            background: var(--green-dark);
+
+            color: white;
+
+            border-radius: 18px;
+
+            padding: 18px;
+
+            display: flex;
+
+            gap: 12px;
+
+            align-items: flex-start;
+        }
+
+        .safety-icon {
+
+            width: 32px;
+            height: 32px;
+
+            border-radius: 9px;
+
+            display: grid;
+            place-items: center;
+
+            background: rgba(255,255,255,0.1);
+
+            flex: 0 0 auto;
+        }
+
+        .safety-note strong {
+
+            display: block;
+
+            font-size: 12px;
+
+            margin-bottom: 4px;
+        }
+
+        .safety-note p {
+
+            color: rgba(255,255,255,0.68);
+
+            font-size: 10px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           ANALYSE BUTTON
+        ===================================================== */
+
+        .analyse-button {
+
+            width: 100%;
+
+            border: none;
+
+            border-radius: 13px;
+
+            padding: 14px;
+
+            background: var(--green);
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            margin-top: 18px;
+
+            transition: 0.25s;
+
+            box-shadow:
+                0 10px 24px rgba(30,106,67,0.15);
+        }
+
+        .analyse-button:hover:not(:disabled) {
+
+            background: var(--green-dark);
+
+            transform: translateY(-2px);
+        }
+
+        .analyse-button:disabled {
+
+            opacity: 0.45;
+
+            cursor: not-allowed;
+
+            box-shadow: none;
+        }
+
+
+        /* =====================================================
+           SCANNING MODAL
+        ===================================================== */
+
+        .scan-overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 2000;
+
+            background:
+                rgba(9,32,21,0.72);
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            backdrop-filter: blur(7px);
+        }
+
+        .scan-overlay.active {
+
+            display: flex;
+
+        }
+
+        .scan-modal {
+
+            width: min(440px, 100%);
+
+            background: white;
+
+            border-radius: 25px;
+
+            padding: 32px;
+
+            text-align: center;
+
+            box-shadow:
+                0 30px 90px rgba(0,0,0,0.22);
+        }
+
+        .scan-animation {
+
+            width: 145px;
+            height: 145px;
+
+            margin: 0 auto 24px;
+
+            border-radius: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eaf4e7,
+                    #d7e8ce
+                );
+
+            position: relative;
+
+            display: grid;
+            place-items: center;
+
+            overflow: hidden;
+        }
+
+        .scan-leaf {
+
+            font-size: 66px;
+
+            animation:
+                leafPulse 1.7s ease-in-out infinite;
+        }
+
+        @keyframes leafPulse {
+
+            0%,100% {
+                transform: scale(1) rotate(-4deg);
+            }
+
+            50% {
+                transform: scale(1.08) rotate(4deg);
+            }
+        }
+
+        .scan-line {
+
+            position: absolute;
+
+            left: 15px;
+            right: 15px;
+
+            height: 3px;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 14px rgba(30,106,67,0.65);
+
+            animation:
+                scanLine 1.5s linear infinite;
+        }
+
+        @keyframes scanLine {
+
+            0% {
+                top: 15px;
+            }
+
+            50% {
+                top: calc(100% - 18px);
+            }
+
+            100% {
+                top: 15px;
+            }
+        }
+
+        .scan-modal h3 {
+
+            font-family: "Manrope", sans-serif;
+
+            color: var(--green-dark);
+
+            font-size: 22px;
+
+            margin-bottom: 8px;
+        }
+
+        .scan-modal p {
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           RESULT MODAL
+        ===================================================== */
+
+        .result-card {
+
+            display: none;
+
+            margin-top: 20px;
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            border: 1px solid var(--line);
+        }
+
+        .result-card.show {
+
+            display: block;
+
+            animation:
+                resultAppear 0.45s ease;
+        }
+
+        @keyframes resultAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        .result-top {
+
+            background: var(--orange-soft);
+
+            padding: 19px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .result-label {
+
+            color: var(--orange);
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.08em;
+        }
+
+        .result-name {
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+            color: var(--ink);
+
+            margin-top: 4px;
+        }
+
+        .confidence {
+
+            width: 58px;
+            height: 58px;
+
+            border-radius: 50%;
+
+            display: grid;
+            place-items: center;
+
+            background: white;
+
+            border: 4px solid #f1c27b;
+
+            font-weight: 800;
+
+            font-size: 12px;
+        }
+
+        .result-body {
+
+            padding: 17px;
+
+            background: white;
+        }
+
+        .result-body p {
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            line-height: 1.6;
+        }
+
+        .result-warning {
+
+            margin-top: 12px;
+
+            background: var(--red-soft);
+
+            color: var(--red);
+
+            border-radius: 10px;
+
+            padding: 10px;
+
+            font-size: 10px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 850px) {
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+            .scan-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .info-column {
+                display: grid;
+
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .safety-note {
+                grid-column: 1 / -1;
+            }
+
+        }
+
+
+        @media (max-width: 560px) {
+
+            .navbar {
+                height: 68px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .brand-mark {
+                width: 35px;
+                height: 35px;
+            }
+
+            .back-dashboard {
+                font-size: 11px;
+                padding: 9px 11px;
+            }
+
+            .page {
+                width: calc(100% - 22px);
+                padding-top: 35px;
+            }
+
+            .page-title {
+                font-size: 35px;
+            }
+
+            .page-description {
+                font-size: 13px;
+            }
+
+            .upload-card {
+                padding: 16px;
+                border-radius: 20px;
+            }
+
+            .drop-zone {
+                min-height: 315px;
+                padding: 20px;
+            }
+
+            .crop-details {
+                grid-template-columns: 1fr;
+            }
+
+            .info-column {
+                display: flex;
+            }
+
+            .signals {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+
+        /* =====================================================
+           ACCESSIBILITY
+        ===================================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ===================================================== -->
+
+    <header class="navbar">
+
+        <a href="../index.html" class="brand">
+
+            <div class="brand-mark">
+                🌿
+            </div>
+
+            Crop<span>Guard</span>
+
+        </a>
+
+
+        <div class="nav-right">
+
+            <a
+                href="dashboard.html"
+                class="back-dashboard"
+            >
+                ← Dashboard
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ===================================================== -->
+
+    <main class="page">
+
+
+        <!-- PAGE INTRO -->
+
+        <section class="page-header">
+
+            <div class="eyebrow">
+
+                <span class="eyebrow-dot"></span>
+
+                CROP HEALTH CHECK
+
+            </div>
+
+
+            <h1 class="page-title">
+
+                Let's take a closer look at
+                <span>your crop.</span>
+
+            </h1>
+
+
+            <p class="page-description">
+
+                Upload a clear photo of the affected leaf, fruit or stem.
+                CropGuard will look for visible crop-health signals and
+                combine them with field conditions to help you decide
+                what to check next.
+
+            </p>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SCAN LAYOUT
+        ================================================== -->
+
+        <section class="scan-layout">
+
+
+            <!-- =============================================
+                 LEFT — UPLOAD
+            ============================================== -->
+
+            <div class="upload-card">
+
+
+                <div class="card-heading">
+
+                    <div class="card-title">
+                        Add a crop photo
+                    </div>
+
+                    <div class="step">
+                        Step 1 of 3
+                    </div>
+
+                </div>
+
+
+
+                <!-- DROP AREA -->
+
+                <div
+                    class="drop-zone"
+                    id="dropZone"
+                >
+
+
+                    <!-- Default content -->
+
+                    <div id="uploadContent">
+
+                        <div class="upload-icon">
+                            📷
+                        </div>
+
+                        <div class="drop-title">
+                            Show us the plant
+                        </div>
+
+                        <p class="drop-text">
+
+                            Take a photo in good daylight.
+                            Try to keep the affected part of
+                            the plant clearly visible.
+
+                        </p>
+
+                        <button
+                            class="browse-btn"
+                            id="browseBtn"
+                        >
+                            Choose Photo
+                        </button>
+
+                        <div class="file-note">
+                            JPG, PNG or WEBP • Maximum 10 MB
+                        </div>
+
+                    </div>
+
+
+                    <!-- Image preview -->
+
+                    <div
+                        class="image-preview"
+                        id="imagePreview"
+                    >
+
+                        <img
+                            id="previewImage"
+                            src=""
+                            alt="Selected crop"
+                        >
+
+                        <div class="preview-overlay">
+
+                            <span
+                                class="preview-file"
+                                id="previewFile"
+                            >
+                                Crop photo
+                            </span>
+
+                            <button
+                                class="remove-image"
+                                id="removeImage"
+                            >
+                                Remove
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/jpeg,image/png,image/webp"
+                    hidden
+                >
+
+
+
+                <!-- CROP DETAILS -->
+
+                <div class="crop-details">
+
+                    <div>
+
+                        <label
+                            class="field-label"
+                            for="cropType"
+                        >
+                            What crop is this?
+                        </label>
+
+                        <select
+                            class="select-box"
+                            id="cropType"
+                        >
+
+                            <option value="">
+                                Select crop
+                            </option>
+
+                            <option>
+                                Wheat
+                            </option>
+
+                            <option>
+                                Rice
+                            </option>
+
+                            <option>
+                                Maize
+                            </option>
+
+                            <option>
+                                Potato
+                            </option>
+
+                            <option>
+                                Tomato
+                            </option>
+
+                            <option>
+                                Cotton
+                            </option>
+
+                            <option>
+                                Mustard
+                            </option>
+
+                            <option>
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div>
+
+                        <label
+                            class="field-label"
+                            for="plantPart"
+                        >
+                            What are you showing?
+                        </label>
+
+                        <select
+                            class="select-box"
+                            id="plantPart"
+                        >
+
+                            <option value="">
+                                Select part
+                            </option>
+
+                            <option>
+                                Leaf
+                            </option>
+
+                            <option>
+                                Fruit
+                            </option>
+
+                            <option>
+                                Stem
+                            </option>
+
+                            <option>
+                                Whole plant
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="analyse-button"
+                    id="analyseButton"
+                    disabled
+                >
+                    🔍 Analyse Crop
+                </button>
+
+
+
+                <!-- DEMO RESULT -->
+
+                <div
+                    class="result-card"
+                    id="resultCard"
+                >
+
+                    <div class="result-top">
+
+                        <div>
+
+                            <div class="result-label">
+                                Preliminary signal
+                            </div>
+
+                            <div
+                                class="result-name"
+                                id="resultName"
+                            >
+                                Fungal stress
+                            </div>
+
+                        </div>
+
+                        <div class="confidence">
+                            87%
+                        </div>
+
+                    </div>
+
+                    <div class="result-body">
+
+                        <p>
+
+                            The image shows visual patterns that may
+                            be associated with fungal-related stress.
+                            Field confirmation is recommended before
+                            taking treatment decisions.
+
+                        </p>
+
+                        <div class="result-warning">
+
+                            ⚠️ This is a demonstration result, not a
+                            confirmed diagnosis. CropGuard should use
+                            expert validation and field conditions
+                            before recommending action.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 RIGHT — INFORMATION
+            ============================================== -->
+
+            <div class="info-column">
+
+
+                <!-- HOW IT WORKS -->
+
+                <div class="info-card">
+
+                    <div class="info-card-title">
+                        How CropGuard helps
+                    </div>
+
+
+                    <div class="process">
+
+
+                        <div class="process-item">
+
+                            <div class="process-number">
+                                01
+                            </div>
+
+                            <div class="process-text">
+
+                                <strong>
+                                    See the symptom
+                                </strong>
+
+                                <span>
+                                    Upload a clear crop image
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="process-item">
+
+                            <div class="process-number">
+                                02
+                            </div>
+
+                            <div class="process-text">
+
+                                <strong>
+                                    Analyse the signal
+                                </strong>
+
+                                <span>
+                                    AI checks visible patterns
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="process-item">
+
+                            <div class="process-number">
+                                03
+                            </div>
+
+                            <div class="process-text">
+
+                                <strong>
+                                    Add field context
+                                </strong>
+
+                                <span>
+                                    Weather and crop conditions matter
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="process-item">
+
+                            <div class="process-number">
+                                04
+                            </div>
+
+                            <div class="process-text">
+
+                                <strong>
+                                    Decide what to check
+                                </strong>
+
+                                <span>
+                                    Get a clear next step
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- WHAT WE CHECK -->
+
+                <div class="info-card">
+
+                    <div class="info-card-title">
+                        CropGuard looks beyond the photo
+                    </div>
+
+
+                    <div class="signals">
+
+
+                        <div class="signal">
+
+                            <div class="signal-icon">
+                                🍃
+                            </div>
+
+                            <strong>
+                                Leaf symptoms
+                            </strong>
+
+                            <span>
+                                Spots, colour and visible changes
+                            </span>
+
+                        </div>
+
+
+                        <div class="signal">
+
+                            <div class="signal-icon">
+                                🌦️
+                            </div>
+
+                            <strong>
+                                Weather
+                            </strong>
+
+                            <span>
+                                Humidity, rainfall and temperature
+                            </span>
+
+                        </div>
+
+
+                        <div class="signal">
+
+                            <div class="signal-icon">
+                                🐛
+                            </div>
+
+                            <strong>
+                                Pest signals
+                            </strong>
+
+                            <span>
+                                Local pest activity and patterns
+                            </span>
+
+                        </div>
+
+
+                        <div class="signal">
+
+                            <div class="signal-icon">
+                                📍
+                            </div>
+
+                            <strong>
+                                Field context
+                            </strong>
+
+                            <span>
+                                Crop stage and field conditions
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SAFETY -->
+
+                <div class="safety-note">
+
+                    <div class="safety-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Advice should support, not replace judgement
+                        </strong>
+
+                        <p>
+
+                            CropGuard is designed to help farmers
+                            identify risks earlier. Recommendations
+                            should consider integrated pest management,
+                            local guidance and expert validation.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         SCANNING OVERLAY
+    ===================================================== -->
+
+    <div
+        class="scan-overlay"
+        id="scanOverlay"
+    >
+
+        <div class="scan-modal">
+
+            <div class="scan-animation">
+
+                <div class="scan-leaf">
+                    🍃
+                </div>
+
+                <div class="scan-line"></div>
+
+            </div>
+
+            <h3>
+                Checking your crop...
+            </h3>
+
+            <p id="scanMessage">
+                Looking at visible crop-health signals
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
+
+    <script>
+
+        const browseBtn =
+            document.getElementById("browseBtn");
+
+        const imageInput =
+            document.getElementById("imageInput");
+
+        const dropZone =
+            document.getElementById("dropZone");
+
+        const uploadContent =
+            document.getElementById("uploadContent");
+
+        const imagePreview =
+            document.getElementById("imagePreview");
+
+        const previewImage =
+            document.getElementById("previewImage");
+
+        const previewFile =
+            document.getElementById("previewFile");
+
+        const removeImage =
+            document.getElementById("removeImage");
+
+        const cropType =
+            document.getElementById("cropType");
+
+        const plantPart =
+            document.getElementById("plantPart");
+
+        const analyseButton =
+            document.getElementById("analyseButton");
+
+        const scanOverlay =
+            document.getElementById("scanOverlay");
+
+        const scanMessage =
+            document.getElementById("scanMessage");
+
+        const resultCard =
+            document.getElementById("resultCard");
+
+
+        let selectedFile = null;
+
+
+
+        /* =====================================================
+           OPEN FILE PICKER
+        ===================================================== */
+
+        browseBtn.addEventListener("click", () => {
+
+            imageInput.click();
+
+        });
+
+
+
+        /* =====================================================
+           FILE SELECTED
+        ===================================================== */
+
+        imageInput.addEventListener("change", () => {
+
+            if (!imageInput.files.length) {
+                return;
+            }
+
+            handleFile(imageInput.files[0]);
+
+        });
+
+
+
+        /* =====================================================
+           HANDLE FILE
+        ===================================================== */
+
+        function handleFile(file) {
+
+            if (!file.type.startsWith("image/")) {
+
+                alert("Please choose a crop image.");
+
+                return;
+            }
+
+
+            if (file.size > 10 * 1024 * 1024) {
+
+                alert("Image must be smaller than 10 MB.");
+
+                return;
+            }
+
+
+            selectedFile = file;
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload = function(event) {
+
+                previewImage.src =
+                    event.target.result;
+
+                previewFile.textContent =
+                    file.name;
+
+                uploadContent.style.display =
+                    "none";
+
+                imagePreview.classList.add("show");
+
+                updateAnalyseButton();
+
+            };
+
+
+            reader.readAsDataURL(file);
+
+        }
+
+
+
+        /* =====================================================
+           REMOVE IMAGE
+        ===================================================== */
+
+        removeImage.addEventListener("click", (event) => {
+
+            event.stopPropagation();
+
+            selectedFile = null;
+
+            imageInput.value = "";
+
+            previewImage.src = "";
+
+            imagePreview.classList.remove("show");
+
+            uploadContent.style.display =
+                "block";
+
+            resultCard.classList.remove("show");
+
+            updateAnalyseButton();
+
+        });
+
+
+
+        /* =====================================================
+           DRAG & DROP
+        ===================================================== */
+
+        [
+            "dragenter",
+            "dragover"
+        ].forEach(eventName => {
+
+            dropZone.addEventListener(
+                eventName,
+                (event) => {
+
+                    event.preventDefault();
+
+                    dropZone.classList.add("dragging");
+
+                }
+            );
+
+        });
+
+
+        [
+            "dragleave",
+            "drop"
+        ].forEach(eventName => {
+
+            dropZone.addEventListener(
+                eventName,
+                (event) => {
+
+                    event.preventDefault();
+
+                    dropZone.classList.remove("dragging");
+
+                }
+            );
+
+        });
+
+
+        dropZone.addEventListener("drop", (event) => {
+
+            const files =
+                event.dataTransfer.files;
+
+            if (!files.length) {
+                return;
+            }
+
+            handleFile(files[0]);
+
+        });
+
+
+
+        /* =====================================================
+           CROP DETAILS
+        ===================================================== */
+
+        cropType.addEventListener(
+            "change",
+            updateAnalyseButton
+        );
+
+        plantPart.addEventListener(
+            "change",
+            updateAnalyseButton
+        );
+
+
+        function updateAnalyseButton() {
+
+            analyseButton.disabled =
+                !selectedFile ||
+                !cropType.value ||
+                !plantPart.value;
+
+        }
+
+
+
+        /* =====================================================
+           ANALYSE
+        ===================================================== */
+
+        analyseButton.addEventListener(
+            "click",
+            startAnalysis
+        );
+
+
+        function startAnalysis() {
+
+            if (!selectedFile) {
+                return;
+            }
+
+
+            scanOverlay.classList.add("active");
+
+            analyseButton.disabled = true;
+
+
+            const messages = [
+
+                "Looking at visible crop-health signals",
+
+                "Checking patterns in the crop image",
+
+                "Connecting image signals with field context",
+
+                "Preparing your crop-health summary"
+
+            ];
+
+
+            let messageIndex = 0;
+
+
+            const messageTimer =
+                setInterval(() => {
+
+                    messageIndex++;
+
+                    if (messageIndex < messages.length) {
+
+                        scanMessage.textContent =
+                            messages[messageIndex];
+
+                    }
+
+                }, 900);
+
+
+
+            setTimeout(() => {
+
+                clearInterval(messageTimer);
+
+                scanOverlay.classList.remove("active");
+
+                showResult();
+
+            }, 3900);
+
+        }
+
+
+
+        /* =====================================================
+           SHOW DEMO RESULT
+        ===================================================== */
+
+        function showResult() {
+
+            resultCard.classList.add("show");
+
+            analyseButton.disabled = false;
+
+            resultCard.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+
+        }
+
+
+
+        /* =====================================================
+           CLICK DROP ZONE
+        ===================================================== */
+
+        dropZone.addEventListener("click", (event) => {
+
+            if (
+                event.target === removeImage ||
+                imagePreview.classList.contains("show")
+            ) {
+                return;
+            }
+
+            imageInput.click();
+
+        });
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CropGuard | Farmer Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        /* =========================================================
+           CROPGUARD FARMER DASHBOARD
+           Self-contained page styling
+        ========================================================= */
+
+        :root {
+            --green-900: #123d29;
+            --green-800: #185637;
+            --green-700: #1e6a43;
+            --green-600: #2f8053;
+            --green-500: #58a66b;
+            --green-100: #eaf4e9;
+            --green-50: #f4f8f1;
+
+            --lime: #c8df78;
+
+            --cream: #f7f7f0;
+            --white: #ffffff;
+
+            --ink: #17231d;
+            --muted: #68766d;
+            --line: #e0e7df;
+
+            --orange: #e99b42;
+            --orange-bg: #fff4e5;
+
+            --red: #d75c50;
+            --red-bg: #fff0ed;
+
+            --blue: #5c94b7;
+            --blue-bg: #edf6fa;
+
+            --shadow: 0 18px 50px rgba(27, 61, 39, 0.08);
+            --shadow-small: 0 8px 24px rgba(27, 61, 39, 0.07);
+
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* =========================================================
+           TOP NAV
+        ========================================================= */
+
+        .dashboard-nav {
+            height: 76px;
+            background: rgba(255, 255, 255, 0.94);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(14px);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 42px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Manrope", sans-serif;
+            font-weight: 800;
+            font-size: 21px;
+            color: var(--green-900);
+        }
+
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            background: var(--green-700);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 8px 20px rgba(30, 106, 67, 0.2);
+        }
+
+        .brand span {
+            color: var(--green-700);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.25s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--green-700);
+            background: var(--green-50);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .language {
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .notification {
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: white;
+            position: relative;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .notification-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--red);
+            top: 8px;
+            right: 8px;
+            border: 2px solid white;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 16px;
+            border-left: 1px solid var(--line);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d8e9c5, #9cc987);
+            display: grid;
+            place-items: center;
+            font-size: 19px;
+        }
+
+        .profile-name {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .profile-location {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* =========================================================
+           PAGE
+        ========================================================= */
+
+        .dashboard-wrapper {
+            width: min(1440px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 36px 0 70px;
+        }
+
+        /* =========================================================
+           WELCOME
+        ========================================================= */
+
+        .welcome-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .welcome-eyebrow {
+            color: var(--green-700);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .welcome-title {
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(28px, 4vw, 42px);
+            line-height: 1.08;
+            letter-spacing: -0.04em;
+            color: var(--green-900);
+        }
+
+        .welcome-title span {
+            color: var(--green-600);
+        }
+
+        .welcome-text {
+            margin-top: 9px;
+            color: var(--muted);
+            max-width: 620px;
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        .date-chip {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 13px 17px;
+            color: var(--muted);
+            font-size: 13px;
+            white-space: nowrap;
+            box-shadow: var(--shadow-small);
+        }
+
+        /* =========================================================
+           HERO ACTION
+        ========================================================= */
+
+        .scan-hero {
+            min-height: 270px;
+            border-radius: var(--radius-lg);
+            background:
+                radial-gradient(circle at 85% 20%, rgba(200, 223, 120, 0.35), transparent 28%),
+                linear-gradient(120deg, #123d29 0%, #1d6340 58%, #397b4d 100%);
+            color: white;
+            padding: 34px 38px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 35px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .scan-hero::before {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            right: 90px;
+            top: -250px;
+        }
+
+        .scan-hero::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            right: -90px;
+            bottom: -190px;
+        }
+
+        .scan-copy {
+            max-width: 610px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .scan-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 30px;
+            padding: 7px 11px;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--lime);
+            border-radius: 50%;
+            box-shadow: 0 0 0 5px rgba(200,223,120,0.12);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 4px rgba(200,223,120,0.12);
+            }
+
+            50% {
+                box-shadow: 0 0 0 9px rgba(200,223,120,0.02);
+            }
+        }
+
+        .scan-title {
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(25px, 3vw, 37px);
+            line-height: 1.1;
+            letter-spacing: -0.035em;
+            margin-bottom: 11px;
+        }
+
+        .scan-description {
+            color: rgba(255,255,255,0.75);
+            line-height: 1.6;
+            max-width: 550px;
+            font-size: 14px;
+        }
+
+        .scan-actions {
+            margin-top: 23px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .primary-scan {
+            border: none;
+            background: var(--lime);
+            color: var(--green-900);
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            transition: 0.25s ease;
+            box-shadow: 0 9px 25px rgba(0,0,0,0.14);
+        }
+
+        .primary-scan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 13px 30px rgba(0,0,0,0.18);
+        }
+
+        .secondary-scan {
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            padding: 13px 19px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .secondary-scan:hover {
+            background: rgba(255,255,255,0.14);
+        }
+
+        /* =========================================================
+           FARM ILLUSTRATION
+        ========================================================= */
+
+        .farm-art {
+            width: 390px;
+            min-width: 330px;
+            height: 230px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sun {
+            position: absolute;
+            right: 55px;
+            top: 12px;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #e8e58a;
+            box-shadow: 0 0 0 12px rgba(232,229,138,0.08);
+        }
+
+        .cloud {
+            position: absolute;
+            width: 105px;
+            height: 28px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.14);
+            top: 58px;
+            left: 25px;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.14);
+        }
+
+        .cloud::before {
+            width: 45px;
+            height: 45px;
+            left: 15px;
+            bottom: 2px;
+        }
+
+        .cloud::after {
+            width: 34px;
+            height: 34px;
+            right: 15px;
+            bottom: 0;
+        }
+
+        .field-back {
+            position: absolute;
+            bottom: 20px;
+            left: 5px;
+            width: 370px;
+            height: 120px;
+            background: #73975d;
+            clip-path: polygon(0 35%, 52% 0, 100% 31%, 100% 100%, 0 100%);
+            border-radius: 35px 35px 0 0;
+        }
+
+        .field-line {
+            position: absolute;
+            height: 2px;
+            background: rgba(255,255,255,0.17);
+            transform: rotate(-9deg);
+            left: 20px;
+            width: 330px;
+        }
+
+        .field-line.one { bottom: 83px; }
+        .field-line.two { bottom: 60px; }
+        .field-line.three { bottom: 38px; }
+
+        .plant {
+            position: absolute;
+            bottom: 47px;
+            width: 55px;
+            height: 72px;
+        }
+
+        .plant::before {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 62px;
+            background: #326644;
+            bottom: 0;
+            left: 26px;
+            border-radius: 4px;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 27px;
+            height: 15px;
+            background: #8fbe62;
+            border-radius: 100% 0 100% 0;
+        }
+
+        .leaf.left {
+            left: 2px;
+            top: 25px;
+            transform: rotate(-27deg);
+        }
+
+        .leaf.right {
+            right: 1px;
+            top: 15px;
+            transform: rotate(26deg) scaleX(-1);
+        }
+
+        .leaf.top {
+            left: 14px;
+            top: 2px;
+            transform: rotate(10deg);
+        }
+
+        .plant-a { left: 45px; transform: scale(0.8); }
+        .plant-b { left: 130px; transform: scale(1.05); }
+        .plant-c { left: 225px; transform: scale(0.75); }
+        .plant-d { right: 12px; transform: scale(0.95); }
+
+        /* Farmer silhouette */
+        .farmer {
+            position: absolute;
+            bottom: 53px;
+            left: 176px;
+            width: 72px;
+            height: 125px;
+            animation: farmerFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes farmerFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .farmer-head {
+            position: absolute;
+            top: 7px;
+            left: 27px;
+            width: 27px;
+            height: 30px;
+            border-radius: 50%;
+            background: #a96f4b;
+        }
+
+        .farmer-hat {
+            position: absolute;
+            top: 0;
+            left: 17px;
+            width: 47px;
+            height: 11px;
+            border-radius: 50%;
+            background: #d0b05d;
+        }
+
+        .farmer-hat::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 13px;
+            border-radius: 50%;
+            background: #b69547;
+            left: 8px;
+            top: -6px;
+        }
+
+        .farmer-body {
+            position: absolute;
+            top: 35px;
+            left: 21px;
+            width: 39px;
+            height: 54px;
+            background: #d4e1bd;
+            border-radius: 12px 12px 8px 8px;
+        }
+
+        .farmer-arm {
+            position: absolute;
+            width: 12px;
+            height: 45px;
+            background: #a96f4b;
+            border-radius: 10px;
+            top: 39px;
+        }
+
+        .farmer-arm.left {
+            left: 12px;
+            transform: rotate(18deg);
+        }
+
+        .farmer-arm.right {
+            right: 10px;
+            transform: rotate(-28deg);
+        }
+
+        .farmer-leg {
+            position: absolute;
+            width: 14px;
+            height: 44px;
+            background: #38554a;
+            border-radius: 10px;
+            top: 82px;
+        }
+
+        .farmer-leg.left {
+            left: 23px;
+            transform: rotate(7deg);
+        }
+
+        .farmer-leg.right {
+            right: 21px;
+            transform: rotate(-9deg);
+        }
+
+        /* =========================================================
+           STATS
+        ========================================================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 21px;
+            box-shadow: var(--shadow-small);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .stat-icon.green {
+            background: var(--green-100);
+        }
+
+        .stat-icon.orange {
+            background: var(--orange-bg);
+        }
+
+        .stat-icon.blue {
+            background: var(--blue-bg);
+        }
+
+        .stat-icon.red {
+            background: var(--red-bg);
+        }
+
+        .stat-change {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--green-700);
+            background: var(--green-50);
+            padding: 5px 8px;
+            border-radius: 20px;
+        }
+
+        .stat-number {
+            font-family: "Manrope", sans-serif;
+            font-size: 29px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* =========================================================
+           MAIN GRID
+        ========================================================= */
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.8fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-small);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 22px 24px 17px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .panel-title {
+            font-family: "Manrope", sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .panel-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .view-link {
+            color: var(--green-700);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           FIELD HEALTH
+        ========================================================= */
+
+        .field-list {
+            padding: 0 20px 20px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 45px 1fr auto;
+            align-items: center;
+            gap: 13px;
+            padding: 15px 6px;
+            border-top: 1px solid var(--line);
+        }
+
+        .field-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--green-50);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 19px;
+        }
+
+        .field-name {
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .field-info {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .health-right {
+            text-align: right;
+        }
+
+        .health-score {
+            font-family: "Manrope", sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .health-status {
+            font-size: 10px;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .healthy {
+            color: var(--green-700);
+        }
+
+        .watch {
+            color: var(--orange);
+        }
+
+        .risk {
+            color: var(--red);
+        }
+
+        /* =========================================================
+           WEATHER
+        ========================================================= */
+
+        .weather-panel {
+            padding-bottom: 20px;
+        }
+
+        .weather-main {
+            margin: 4px 24px 20px;
+            border-radius: 17px;
+            background:
+                linear-gradient(135deg, #eaf4e9, #f5f7e9);
+            padding: 21px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .weather-temp {
+            font-family: "Manrope", sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+        }
+
+        .weather-place {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .weather-icon {
+            font-size: 52px;
+            animation: cloudMove 4s ease-in-out infinite;
+        }
+
+        @keyframes cloudMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 0 24px;
+            gap: 8px;
+        }
+
+        .weather-detail {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 11px 8px;
+            text-align: center;
+        }
+
+        .weather-detail strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .weather-detail span {
+            color: var(--muted);
+            display: block;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        /* =========================================================
+           ALERTS
+        ========================================================= */
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .alert-list {
+            padding: 0 20px 20px;
+        }
+
+        .alert-item {
+            display: flex;
+            gap: 13px;
+            padding: 15px 4px;
+            border-top: 1px solid var(--line);
+        }
+
+        .alert-symbol {
+            width: 37px;
+            height: 37px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+        }
+
+        .alert-symbol.warning {
+            background: var(--orange-bg);
+        }
+
+        .alert-symbol.info {
+            background: var(--blue-bg);
+        }
+
+        .alert-symbol.good {
+            background: var(--green-100);
+        }
+
+        .alert-title {
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .alert-text {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        .alert-time {
+            color: #98a39b;
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        /* =========================================================
+           QUICK ACTIONS
+        ========================================================= */
+
+        .quick-actions {
+            padding: 0 20px 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 11px;
+        }
+
+        .quick-action {
+            border: 1px solid var(--line);
+            background: white;
+            border-radius: 15px;
+            padding: 16px;
+            text-align: left;
+            transition: 0.25s ease;
+            min-height: 105px;
+        }
+
+        .quick-action:hover {
+            border-color: #bdd3c0;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-small);
+        }
+
+        .quick-icon {
+            width: 35px;
+            height: 35px;
+            background: var(--green-50);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+
+        .quick-action strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .quick-action span {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .dashboard-footer {
+            margin-top: 32px;
+            padding-top: 22px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .footer-brand {
+            font-weight: 800;
+            color: var(--green-700);
+        }
+
+        /* =========================================================
+           MOBILE MENU
+        ========================================================= */
+
+        .mobile-menu-btn {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--line);
+            background: white;
+            border-radius: 11px;
+            font-size: 19px;
+        }
+
+        /* =========================================================
+           REVEAL ANIMATION
+        ========================================================= */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            .nav-left {
+                gap: 18px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .farm-art {
+                width: 330px;
+                min-width: 300px;
+                transform: scale(0.9);
+                transform-origin: right center;
+            }
+        }
+
+        @media (max-width: 850px) {
+
+            .dashboard-nav {
+                padding: 0 18px;
+            }
+
+            .nav-right .language,
+            .profile-name,
+            .profile-location {
+                display: none;
+            }
+
+            .profile {
+                padding-left: 0;
+                border: none;
+            }
+
+            .mobile-menu-btn {
+                display: grid;
+                place-items: center;
+            }
+
+            .dashboard-wrapper {
+                width: min(100% - 28px, 700px);
+                padding-top: 25px;
+            }
+
+            .welcome-row {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .date-chip {
+                width: 100%;
+            }
+
+            .scan-hero {
+                padding: 28px;
+                min-height: auto;
+            }
+
+            .farm-art {
+                display: none;
+            }
+
+            .main-grid,
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+
+            .dashboard-nav {
+                height: 68px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .brand-mark {
+                width: 34px;
+                height: 34px;
+            }
+
+            .notification {
+                width: 38px;
+                height: 38px;
+            }
+
+            .dashboard-wrapper {
+                width: calc(100% - 22px);
+                padding-bottom: 40px;
+            }
+
+            .welcome-title {
+                font-size: 29px;
+            }
+
+            .welcome-text {
+                font-size: 13px;
+            }
+
+            .scan-hero {
+                border-radius: 20px;
+                padding: 23px;
+            }
+
+            .scan-title {
+                font-size: 26px;
+            }
+
+            .scan-description {
+                font-size: 13px;
+            }
+
+            .scan-actions {
+                flex-direction: column;
+            }
+
+            .primary-scan,
+            .secondary-scan {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-number {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .weather-details {
+                grid-template-columns: repeat(3, 1fr);
+                padding: 0 16px;
+            }
+
+            .panel-header {
+                padding: 19px 17px 15px;
+            }
+
+            .field-list,
+            .alert-list {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .quick-actions {
+                padding: 0 14px 15px;
+            }
+
+            .dashboard-footer {
+                flex-direction: column;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================================
+         NAVIGATION
+    ========================================================= -->
+
+    <header class="dashboard-nav">
+
+        <div class="nav-left">
+
+            <a href="../index.html" class="brand">
+                <div class="brand-mark">🌿</div>
+                Crop<span>Guard</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="#" class="active">Dashboard</a>
+                <a href="#fields">My Fields</a>
+                <a href="#alerts">Alerts</a>
+                <a href="#actions">Tools</a>
+            </nav>
+
+        </div>
+
+        <div class="nav-right">
+
+            <span class="language">हिंदी / EN</span>
+
+            <button
+                class="notification"
+                aria-label="Notifications"
+                onclick="document.getElementById('alerts').scrollIntoView({behavior:'smooth'})"
+            >
+                🔔
+                <span class="notification-dot"></span>
+            </button>
+
+            <div class="profile">
+
+                <div class="profile-avatar">
+                    🧑‍🌾
+                </div>
+
+                <div>
+                    <div class="profile-name">Farmer</div>
+                    <div class="profile-location">My Farm</div>
+                </div>
+
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         MAIN DASHBOARD
+    ========================================================= -->
+
+    <main class="dashboard-wrapper">
+
+
+        <!-- WELCOME -->
+
+        <section class="welcome-row reveal">
+
+            <div>
+
+                <div class="welcome-eyebrow">
+                    Your Farm • CropGuard
+                </div>
+
+                <h1 class="welcome-title">
+                    Good morning, <span>Farmer.</span>
+                </h1>
+
+                <p class="welcome-text">
+                    Your fields are being watched for crop-health risks.
+                    Check today's conditions and take action before a small
+                    problem becomes a bigger one.
+                </p>
+
+            </div>
+
+            <div class="date-chip">
+                🌤️ Sunday, 6 September 2026
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             BIG CROP SCAN CTA
+        ====================================================== -->
+
+        <section class="scan-hero reveal">
+
+            <div class="scan-copy">
+
+                <div class="scan-label">
+                    <span class="pulse-dot"></span>
+                    CROP HEALTH CHECK
+                </div>
+
+                <h2 class="scan-title">
+                    Something different on your crop?
+                </h2>
+
+                <p class="scan-description">
+                    Take a clear photo of the affected leaf, fruit or stem.
+                    CropGuard can help identify possible crop-health signals
+                    and show you what to check next.
+                </p>
+
+                <div class="scan-actions">
+
+                    <a 
+    href="scan.html" 
+    class="primary-scan"
+>
+    📷 Check Crop Health →
+</a>
+
+                    <button
+                        class="secondary-scan"
+                        onclick="document.getElementById('fields').scrollIntoView({behavior:'smooth'})"
+                    >
+                        View My Fields
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- FARMER + FIELD ILLUSTRATION -->
+
+            <div class="farm-art">
+
+                <div class="sun"></div>
+
+                <div class="cloud"></div>
+
+                <div class="field-back"></div>
+
+                <div class="field-line one"></div>
+                <div class="field-line two"></div>
+                <div class="field-line three"></div>
+
+
+                <div class="plant plant-a">
+                    <span class="leaf left"></span>
+                    <span class="leaf right"></span>
+                    <span class="leaf top"></span>
+                </div>
+
+                <div class="plant plant-b">
+                    <span class="leaf left"></span>
+                    <span class="leaf right"></span>
+                    <span class="leaf top"></span>
+                </div>
+
+                <div class="plant plant-c">
+                    <span class="leaf left"></span>
+                    <span class="leaf right"></span>
+                    <span class="leaf top"></span>
+                </div>
+
+                <div class="plant plant-d">
+                    <span class="leaf left"></span>
+                    <span class="leaf right"></span>
+                    <span class="leaf top"></span>
+                </div>
+
+
+                <div class="farmer">
+
+                    <div class="farmer-hat"></div>
+                    <div class="farmer-head"></div>
+
+                    <div class="farmer-body"></div>
+
+                    <div class="farmer-arm left"></div>
+                    <div class="farmer-arm right"></div>
+
+                    <div class="farmer-leg left"></div>
+                    <div class="farmer-leg right"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUICK FARM STATS
+        ====================================================== -->
+
+        <section class="stats-grid">
+
+            <article class="stat-card reveal">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon green">🌱</div>
+
+                    <span class="stat-change">
+                        Stable
+                    </span>
+
+                </div>
+
+                <div class="stat-number">
+                    82<span style="font-size:16px;">/100</span>
+                </div>
+
+                <div class="stat-label">
+                    Overall crop health
+                </div>
+
+            </article>
+
+
+            <article class="stat-card reveal">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon orange">⚠️</div>
+
+                    <span class="stat-change">
+                        1 new
+                    </span>
+
+                </div>
+
+                <div class="stat-number">
+                    02
+                </div>
+
+                <div class="stat-label">
+                    Active crop alerts
+                </div>
+
+            </article>
+
+
+            <article class="stat-card reveal">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon blue">💧</div>
+
+                    <span class="stat-change">
+                        Good
+                    </span>
+
+                </div>
+
+                <div class="stat-number">
+                    68%
+                </div>
+
+                <div class="stat-label">
+                    Soil moisture
+                </div>
+
+            </article>
+
+
+            <article class="stat-card reveal">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon red">🌦️</div>
+
+                    <span class="stat-change">
+                        72 hrs
+                    </span>
+
+                </div>
+
+                <div class="stat-number">
+                    61%
+                </div>
+
+                <div class="stat-label">
+                    Disease-risk signal
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =====================================================
+             FIELD + WEATHER
+        ====================================================== -->
+
+        <section class="main-grid">
+
+
+            <!-- MY FIELDS -->
+
+            <article
+                class="panel reveal"
+                id="fields"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+                        <div class="panel-title">
+                            My Fields
+                        </div>
+
+                        <div class="panel-subtitle">
+                            Current crop-health overview
+                        </div>
+                    </div>
+
+                    <a href="#" class="view-link">
+                        Manage fields →
+                    </a>
+
+                </div>
+
+
+                <div class="field-list">
+
+
+                    <div class="field-row">
+
+                        <div class="field-icon">
+                            🌾
+                        </div>
+
+                        <div>
+
+                            <div class="field-name">
+                                North Field
+                            </div>
+
+                            <div class="field-info">
+                                Wheat • 2.4 acres • Updated today
+                            </div>
+
+                        </div>
+
+                        <div class="health-right">
+
+                            <div class="health-score">
+                                91
+                            </div>
+
+                            <div class="health-status healthy">
+                                Healthy
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field-row">
+
+                        <div class="field-icon">
+                            🌱
+                        </div>
+
+                        <div>
+
+                            <div class="field-name">
+                                East Field
+                            </div>
+
+                            <div class="field-info">
+                                Rice • 1.8 acres • Updated today
+                            </div>
+
+                        </div>
+
+                        <div class="health-right">
+
+                            <div class="health-score">
+                                78
+                            </div>
+
+                            <div class="health-status watch">
+                                Watch
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field-row">
+
+                        <div class="field-icon">
+                            🌿
+                        </div>
+
+                        <div>
+
+                            <div class="field-name">
+                                South Field
+                            </div>
+
+                            <div class="field-info">
+                                Vegetables • 1.2 acres • Updated yesterday
+                            </div>
+
+                        </div>
+
+                        <div class="health-right">
+
+                            <div class="health-score">
+                                74
+                            </div>
+
+                            <div class="health-status watch">
+                                Watch
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field-row">
+
+                        <div class="field-icon">
+                            🍃
+                        </div>
+
+                        <div>
+
+                            <div class="field-name">
+                                West Field
+                            </div>
+
+                            <div class="field-info">
+                                Maize • 2.1 acres • Updated today
+                            </div>
+
+                        </div>
+
+                        <div class="health-right">
+
+                            <div class="health-score">
+                                88
+                            </div>
+
+                            <div class="health-status healthy">
+                                Healthy
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- WEATHER -->
+
+            <article
+                class="panel weather-panel reveal"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <div class="panel-title">
+                            Today's Weather
+                        </div>
+
+                        <div class="panel-subtitle">
+                            Weather can change crop risk
+                        </div>
+
+                    </div>
+
+                    <span class="view-link">
+                        Live
+                    </span>
+
+                </div>
+
+
+                <div class="weather-main">
+
+                    <div>
+
+                        <div class="weather-temp">
+                            28°
+                        </div>
+
+                        <div class="weather-place">
+                            Partly cloudy • Your area
+                        </div>
+
+                    </div>
+
+                    <div class="weather-icon">
+                        ⛅
+                    </div>
+
+                </div>
+
+
+                <div class="weather-details">
+
+                    <div class="weather-detail">
+                        <strong>74%</strong>
+                        <span>Humidity</span>
+                    </div>
+
+                    <div class="weather-detail">
+                        <strong>12 km/h</strong>
+                        <span>Wind</span>
+                    </div>
+
+                    <div class="weather-detail">
+                        <strong>61%</strong>
+                        <span>Rain chance</span>
+                    </div>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =====================================================
+             ALERTS + QUICK ACTIONS
+        ====================================================== -->
+
+        <section class="lower-grid">
+
+
+            <!-- ALERTS -->
+
+            <article
+                class="panel reveal"
+                id="alerts"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <div class="panel-title">
+                            Early Warnings
+                        </div>
+
+                        <div class="panel-subtitle">
+                            Signals worth checking today
+                        </div>
+
+                    </div>
+
+                    <span class="view-link">
+                        2 active
+                    </span>
+
+                </div>
+
+
+                <div class="alert-list">
+
+
+                    <div class="alert-item">
+
+                        <div class="alert-symbol warning">
+                            ⚠️
+                        </div>
+
+                        <div>
+
+                            <div class="alert-title">
+                                Fungal-risk conditions rising
+                            </div>
+
+                            <div class="alert-text">
+                                Humidity and recent rainfall may create
+                                favourable conditions for fungal problems
+                                in the next 72 hours.
+                            </div>
+
+                            <div class="alert-time">
+                                Detected 35 minutes ago
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="alert-item">
+
+                        <div class="alert-symbol info">
+                            💧
+                        </div>
+
+                        <div>
+
+                            <div class="alert-title">
+                                East Field needs attention
+                            </div>
+
+                            <div class="alert-text">
+                                Soil moisture is higher than usual.
+                                Check drainage and inspect lower leaves.
+                            </div>
+
+                            <div class="alert-time">
+                                Updated 2 hours ago
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="alert-item">
+
+                        <div class="alert-symbol good">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <div class="alert-title">
+                                North Field looks stable
+                            </div>
+
+                            <div class="alert-text">
+                                No significant crop-health signal detected
+                                in the latest field check.
+                            </div>
+
+                            <div class="alert-time">
+                                Updated today
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <article
+                class="panel reveal"
+                id="actions"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <div class="panel-title">
+                            What do you want to do?
+                        </div>
+
+                        <div class="panel-subtitle">
+                            Quick tools for your farm
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+
+                    <button
+                        class="quick-action"
+                        onclick="document.getElementById('startScanBtn').click()"
+                    >
+
+                        <div class="quick-icon">
+                            📷
+                        </div>
+
+                        <strong>
+                            Scan a crop
+                        </strong>
+
+                        <span>
+                            Check a leaf or plant
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-action"
+                        onclick="alert('Risk map will be available when field location data is connected.')"
+                    >
+
+                        <div class="quick-icon">
+                            🗺️
+                        </div>
+
+                        <strong>
+                            Risk map
+                        </strong>
+
+                        <span>
+                            See nearby crop signals
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-action"
+                        onclick="alert('Your crop advisory will appear here.')"
+                    >
+
+                        <div class="quick-icon">
+                            💡
+                        </div>
+
+                        <strong>
+                            Crop advisory
+                        </strong>
+
+                        <span>
+                            What should I check?
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-action"
+                        onclick="alert('Expert support will be connected in the next version.')"
+                    >
+
+                        <div class="quick-icon">
+                            🧑‍🌾
+                        </div>
+
+                        <strong>
+                            Ask an expert
+                        </strong>
+
+                        <span>
+                            Get field guidance
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
+        <footer class="dashboard-footer">
+
+            <div>
+                <span class="footer-brand">CropGuard</span>
+                · Helping farmers act earlier.
+            </div>
+
+            <div>
+                AI-assisted insights • Weather • Field signals • Expert validation
+            </div>
+
+        </footer>
+
+    </main>
+
+
+    <!-- =========================================================
+         SIMPLE INTERACTION SCRIPT
+    ========================================================= -->
+
+    <script>
+
+        /* ---------------------------------------------------------
+           Scroll reveal
+        --------------------------------------------------------- */
+
+        const revealElements =
+            document.querySelectorAll(".reveal");
+
+        const revealObserver =
+            new IntersectionObserver(
+                (entries) => {
+
+                    entries.forEach((entry) => {
+
+                        if (entry.isIntersecting) {
+
+                            entry.target.classList.add("visible");
+
+                            revealObserver.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+        revealElements.forEach((element) => {
+            revealObserver.observe(element);
+        });
+
+
+        /* ---------------------------------------------------------
+           Crop scan demo
+        --------------------------------------------------------- */
+
+        const startScanBtn =
+            document.getElementById("startScanBtn");
+
+        if (startScanBtn) {
+
+            startScanBtn.addEventListener("click", () => {
+
+                const input =
+                    document.createElement("input");
+
+                input.type = "file";
+                input.accept = "image/*";
+
+                input.onchange = () => {
+
+                    if (!input.files.length) {
+                        return;
+                    }
+
+                    startScanBtn.innerHTML =
+                        "🔎 Analysing crop...";
+
+                    startScanBtn.disabled = true;
+
+                    setTimeout(() => {
+
+                        startScanBtn.innerHTML =
+                            "✓ Crop image received";
+
+                        setTimeout(() => {
+
+                            startScanBtn.innerHTML =
+                                "📷 Check Crop Health →";
+
+                            startScanBtn.disabled = false;
+
+                            alert(
+                                "Demo scan complete.\n\n" +
+                                "Possible crop-health signals found.\n\n" +
+                                "This demo does not provide a real diagnosis yet. " +
+                                "Connect the CropGuard AI model to enable actual analysis."
+                            );
+
+                        }, 1000);
+
+                    }, 1600);
+
+                };
+
+                input.click();
+
+            });
+
+        }
+
+
+        /* ---------------------------------------------------------
+           Notification button
+        --------------------------------------------------------- */
+
+        const notification =
+            document.querySelector(".notification");
+
+        if (notification) {
+
+            notification.addEventListener("click", () => {
+
+                const dot =
+                    document.querySelector(".notification-dot");
+
+                if (dot) {
+                    dot.style.display = "none";
+                }
+
+            });
+
+        }
+
+
+        /* ---------------------------------------------------------
+           Mobile menu
+        --------------------------------------------------------- */
+
+        const mobileMenuBtn =
+            document.getElementById("mobileMenuBtn");
+
+        const navLinks =
+            document.querySelector(".nav-links");
+
+        if (mobileMenuBtn && navLinks) {
+
+            mobileMenuBtn.addEventListener("click", () => {
+
+                const isOpen =
+                    navLinks.style.display === "flex";
+
+                navLinks.style.display =
+                    isOpen ? "" : "flex";
+
+                if (!isOpen) {
+
+                    navLinks.style.position = "absolute";
+                    navLinks.style.top = "68px";
+                    navLinks.style.left = "11px";
+                    navLinks.style.right = "11px";
+                    navLinks.style.background = "white";
+                    navLinks.style.padding = "10px";
+                    navLinks.style.border = "1px solid #e0e7df";
+                    navLinks.style.borderRadius = "15px";
+                    navLinks.style.flexDirection = "column";
+                    navLinks.style.boxShadow =
+                        "0 18px 40px rgba(27,61,39,.12)";
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+</body>
+</html>
